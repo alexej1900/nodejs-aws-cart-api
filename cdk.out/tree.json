@@ -1,0 +1,374 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "AlexCartServiceStack": {
+        "id": "AlexCartServiceStack",
+        "path": "AlexCartServiceStack",
+        "children": {
+          "cartServiceLambda": {
+            "id": "cartServiceLambda",
+            "path": "AlexCartServiceStack/cartServiceLambda",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "AlexCartServiceStack/cartServiceLambda/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "AlexCartServiceStack/cartServiceLambda/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.116.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "AlexCartServiceStack/cartServiceLambda/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.116.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.116.1"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "AlexCartServiceStack/cartServiceLambda/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "AlexCartServiceStack/cartServiceLambda/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.116.1"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "AlexCartServiceStack/cartServiceLambda/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.116.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.116.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "AlexCartServiceStack/cartServiceLambda/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": {
+                        "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-eu-west-1"
+                      },
+                      "s3Key": "8af65bd784bcc9bda9075e19de92d6f01e93af7f7fec9edfb5d74ea4755a18bd.zip"
+                    },
+                    "environment": {
+                      "variables": {
+                        "PRODUCT_AWS_REGION": "eu-west-1",
+                        "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
+                      }
+                    },
+                    "functionName": "cartService",
+                    "handler": "index.handler",
+                    "role": {
+                      "Fn::GetAtt": [
+                        "cartServiceLambdaServiceRole772ADF50",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "nodejs18.x"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.116.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda_nodejs.NodejsFunction",
+              "version": "2.116.1"
+            }
+          },
+          "CartApi": {
+            "id": "CartApi",
+            "path": "AlexCartServiceStack/CartApi",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "AlexCartServiceStack/CartApi/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Api",
+                  "aws:cdk:cloudformation:props": {
+                    "corsConfiguration": {
+                      "allowHeaders": [
+                        "*"
+                      ],
+                      "allowMethods": [
+                        "*"
+                      ],
+                      "allowOrigins": [
+                        "*"
+                      ]
+                    },
+                    "name": "CartApi",
+                    "protocolType": "HTTP"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnApi",
+                  "version": "2.116.1"
+                }
+              },
+              "DefaultStage": {
+                "id": "DefaultStage",
+                "path": "AlexCartServiceStack/CartApi/DefaultStage",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "AlexCartServiceStack/CartApi/DefaultStage/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Stage",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "CartApi5565E8DE"
+                        },
+                        "autoDeploy": true,
+                        "stageName": "$default"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnStage",
+                      "version": "2.116.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpStage",
+                  "version": "2.114.1-alpha.0"
+                }
+              },
+              "ANY--{api+}": {
+                "id": "ANY--{api+}",
+                "path": "AlexCartServiceStack/CartApi/ANY--{api+}",
+                "children": {
+                  "CartServiceProxyIntegration": {
+                    "id": "CartServiceProxyIntegration",
+                    "path": "AlexCartServiceStack/CartApi/ANY--{api+}/CartServiceProxyIntegration",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "AlexCartServiceStack/CartApi/ANY--{api+}/CartServiceProxyIntegration/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Ref": "CartApi5565E8DE"
+                            },
+                            "integrationType": "AWS_PROXY",
+                            "integrationUri": {
+                              "Fn::GetAtt": [
+                                "cartServiceLambda061768A1",
+                                "Arn"
+                              ]
+                            },
+                            "payloadFormatVersion": "2.0"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
+                          "version": "2.116.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpIntegration",
+                      "version": "2.114.1-alpha.0"
+                    }
+                  },
+                  "CartServiceProxyIntegration-Permission": {
+                    "id": "CartServiceProxyIntegration-Permission",
+                    "path": "AlexCartServiceStack/CartApi/ANY--{api+}/CartServiceProxyIntegration-Permission",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                      "aws:cdk:cloudformation:props": {
+                        "action": "lambda:InvokeFunction",
+                        "functionName": {
+                          "Fn::GetAtt": [
+                            "cartServiceLambda061768A1",
+                            "Arn"
+                          ]
+                        },
+                        "principal": "apigateway.amazonaws.com",
+                        "sourceArn": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "arn:aws:execute-api:eu-west-1:",
+                              {
+                                "Ref": "AWS::AccountId"
+                              },
+                              ":",
+                              {
+                                "Ref": "CartApi5565E8DE"
+                              },
+                              "/*/*/{api+}"
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                      "version": "2.116.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "AlexCartServiceStack/CartApi/ANY--{api+}/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "CartApi5565E8DE"
+                        },
+                        "authorizationType": "NONE",
+                        "routeKey": "ANY /{api+}",
+                        "target": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "integrations/",
+                              {
+                                "Ref": "CartApiANYapiCartServiceProxyIntegration6A744AB0"
+                              }
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
+                      "version": "2.116.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpRoute",
+                  "version": "2.114.1-alpha.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpApi",
+              "version": "2.114.1-alpha.0"
+            }
+          },
+          "ApiUrl": {
+            "id": "ApiUrl",
+            "path": "AlexCartServiceStack/ApiUrl",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.116.1"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "AlexCartServiceStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "AlexCartServiceStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.116.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.3.0"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "AlexCartServiceStack/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.116.1"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "AlexCartServiceStack/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.116.1"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.116.1"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.3.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.116.1"
+    }
+  }
+}
