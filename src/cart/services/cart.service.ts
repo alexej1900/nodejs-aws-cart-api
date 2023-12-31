@@ -50,6 +50,8 @@ export class CartService {
       user_id: userId,
     };
 
+    console.log('createByUserId userId', userId)
+
     return (await pgClient('carts')
       .insert(userCart)
       .returning('*')) as any as Cart;
@@ -57,7 +59,7 @@ export class CartService {
 
   async findOrCreateByUserId(userId: string): Promise<Cart> {
     const userCart = await this.findByUserId(userId);
-
+    console.log('findOrCreateByUserId userId', userId)
     if (userCart) {
       return userCart;
     }
@@ -74,6 +76,7 @@ export class CartService {
     userId: string,
     updateUserCart: UpdateUserCart,
   ): Promise<Cart> {
+    console.log('updateByUserId userId', userId)
     const { id, items, ...rest } = (await this.findOrCreateByUserId(
       userId,
     )) as any as Cart;
@@ -127,6 +130,7 @@ export class CartService {
   }
 
   async removeByUserId(userId: string): Promise<void> {
+    console.log('removeByUserId userId', userId)
     await pgClient.transaction(async (trx) => {
       await trx('carts').where('carts.user_id', userId).del();
     });
@@ -141,6 +145,7 @@ export class CartService {
     cartId: string,
     status = CartStatus.ORDERED,
   ) {
+    console.log('changeCartStatusTransacted cartId', cartId)
     return await trx('carts')
       .where('carts.id', cartId)
       .update({ status })
