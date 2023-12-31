@@ -1,0 +1,35 @@
+# Node_modules are installed as dependencies during Docker build
+node_modules
+
+# Dist will be created on the 'build' stage
+dist
+
+# Exclude npm debug logs
+npm-debug.log*
+
+# Temporary, cache and test folders and files are not required in production version
+cdk.out
+scripts
+**/**/*.spec.ts
+test
+*.temp
+*.cache
+
+# Exclude logs files
+*.log
+
+# Exclude env and lint files
+.env* 
+.eslint.js
+.pritierrc
+README.md
+
+# Exclude docker files
+Dockerfile
+.dockerignore
+docker-compose*
+compose*
+
+# git files are not required
+.gitignore
+.git
